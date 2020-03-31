@@ -1,0 +1,77 @@
+#Create split_scale.py that will contain the functions that follow.
+#Each scaler function should create the object, fit and transform both train and test.
+#They should return the scaler, train dataframe scaled, test dataframe scaled.
+# Be sure your indices represent the original indices from train/test, as those represent the indices from the original dataframe.
+# Be sure to set a random state where applicable for reproducibility!
+
+from wrangle import wrangle_telco
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler, QuantileTransformer, PowerTransformer, RobustScaler, MinMaxScaler
+
+# For this project we are wrangling data from the telco-churn database. 
+# This function pulls the data and cleans it. 
+customers = wrangle_telco()
+
+# We isolate our X and y variables for
+X = customers[["tenure", "monthly_charges"]]
+y = customers["total_charges"]
+train_pct = .8
+
+# Function used to split the data. Although we do produce 4 new datasets (X["train", "test"] and y["train","test"])
+def split_my_data(X, y, train_pct):
+    X_train, X_test, y_train, y_test = train_test_split(X, y,train_size=train_pct, random_state = 123)
+    return X_train, X_test, y_train, y_test
+
+# Helper function used to updated the scaled arrays and transform them into usable dataframes
+def return_values(scaler, train, test):
+    train_scaled = pd.DataFrame(scaler.transform(train), columns=train.columns.values).set_index([train.index.values])
+    test_scaled = pd.DataFrame(scaler.transform(test), columns=test.columns.values).set_index([test.index.values])
+    return scaler, train_scaled, test_scaled
+
+# Linear Scaler
+def standard_scaler(train, test):
+    scaler = StandardScaler().fit(train)
+    scaler, train_scaled, test_scaled = return_values(scaler, train , test)
+    return scaler, train_scaled, test_scaled
+
+# Key function used to reverse scaling
+def scale_inverse(scaler, trained_scaled, test_scaled):
+    train_unscaled = pd.DataFrame(scaler.inverse_transform(train_scaled), columns=train_scaled.columns.values).set_index([train.index.values])
+    test_unscaled = pd.DataFrame(scaler.inverse_transform(test_scaled), columns=test_scaled.columns.values).set_index([test.index.values])
+    return train_unscaled, test_unscaled
+
+# Non-linear
+def uniform_scaler(train, test, uniform=True):
+    if uniform:
+        scaler = QuantileTransformer(output_distribution="uniform").fit(test)
+        scaler, train_scaled, test_scaled = return_values(scaler, train , test)
+        return scaler, train_scaled, test_scaled
+    else:
+        scaler = QuantileTransformer(output_distribution="normal").fit(test)
+        scaler, train_scaled, test_scaled = return_values(scaler, train , test)
+        return scaler, train_scaled, test_scaled
+        
+# Non-linear
+def gaussian_scaler(train, test, positive=True):
+    if positive:
+        scaler = PowerTransformer(method="yeo-johnson").fit(test)
+        sscaler, train_scaled, test_scaled = return_values(scaler, train , test)
+        return scaler, train_scaled, test_scaled
+    else: 
+        scaler = PowerTransformer(method="box-cox").fit(test)
+        scaler, train_scaled, test_scaled = return_values(scaler, train , test)
+        return scaler, train_scaled, test_scaled
+
+# Linear scaler
+def min_max_scaler(train, test):
+    scaler = MinMaxScaler().fit(test)
+    scaler, train_scaled, test_scaled = return_values(scaler, train , test)
+    return scaler, train_scaled, test_scaled
+
+# Linear scaler
+def iqr_robust_scaler(train, test):
+    scaler = RobustScaler().fit(test)
+    scaler, train_scaled, test_scaled = return_values(scaler, train , test)
+    return scaler, train_scaled, test_scaled
