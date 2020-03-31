@@ -37,9 +37,9 @@ def standard_scaler(train, test):
     return scaler, train_scaled, test_scaled
 
 # Key function used to reverse scaling
-def scale_inverse(scaler, trained_scaled, test_scaled):
-    train_unscaled = pd.DataFrame(scaler.inverse_transform(train_scaled), columns=train_scaled.columns.values).set_index([train.index.values])
-    test_unscaled = pd.DataFrame(scaler.inverse_transform(test_scaled), columns=test_scaled.columns.values).set_index([test.index.values])
+def scale_inverse(scaler, train_scaled, test_scaled):
+    train_unscaled = pd.DataFrame(scaler.inverse_transform(train_scaled), columns=train_scaled.columns.values).set_index([train_scaled.index.values])
+    test_unscaled = pd.DataFrame(scaler.inverse_transform(test_scaled), columns=test_scaled.columns.values).set_index([test_scaled.index.values])
     return train_unscaled, test_unscaled
 
 # Non-linear
@@ -52,7 +52,7 @@ def uniform_scaler(train, test, uniform=True):
         scaler = QuantileTransformer(output_distribution="normal").fit(test)
         scaler, train_scaled, test_scaled = return_values(scaler, train , test)
         return scaler, train_scaled, test_scaled
-        
+
 # Non-linear
 def gaussian_scaler(train, test, positive=True):
     if positive:
