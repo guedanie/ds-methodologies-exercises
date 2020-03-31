@@ -16,17 +16,22 @@ FROM customers
 WHERE contract_type_id = 3
 ;
 '''
-
-sql_database("telco_churn", sql)
-
 def wrangle_telco():
-    customers = pd.read_sql(sql, url)
+    '''
+    Function use to pull the "telco_churn" dataset from sql and 
+    returns a dataframe with clean data, and the columns
+    "customer_id", "monthly_charges", "tenure", "total_charges"
+    
+    '''
+
+    customers = sql_database("telco_churn", sql)
     customers[customers["total_charges"].str.contains(' ')]
     customers = customers.replace(' ', np.nan)
     customers = customers.dropna()
     customers.total_charges = customers["total_charges"].astype(float)
     return customers
 
+# The function below can be used if we want to manually calculate total_charges, rather than just pull it from the database (as there were some minor differences)
 # def wrangle_telco():
 #     customers = pd.read_sql(sql, url)
 #     customers[customers["total_charges"].str.contains(' ')]
