@@ -15,9 +15,13 @@ from sklearn.preprocessing import StandardScaler, QuantileTransformer, PowerTran
 customers = wrangle_telco()
 
 # We isolate our X and y variables for
-X = customers[["tenure", "monthly_charges"]]
-y = customers["total_charges"]
 train_pct = .8
+
+def pull_X_y(customers):
+    X = customers[["tenure", "monthly_charges"]]
+    y = customers[["total_charges"]]
+    return X, y
+    
 
 # Function used to split the data. Although we do produce 4 new datasets (X["train", "test"] and y["train","test"])
 def split_my_data(X, y, train_pct):
@@ -54,8 +58,8 @@ def uniform_scaler(train, test, uniform=True):
         return scaler, train_scaled, test_scaled
 
 # Non-linear
-def gaussian_scaler(train, test, positive=True):
-    if positive:
+def gaussian_scaler(train, test, positive_negative=True):
+    if positive_negative:
         scaler = PowerTransformer(method="yeo-johnson").fit(test)
         sscaler, train_scaled, test_scaled = return_values(scaler, train , test)
         return scaler, train_scaled, test_scaled
