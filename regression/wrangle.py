@@ -16,6 +16,15 @@ FROM customers
 WHERE contract_type_id = 3
 ;
 '''
+
+def months_to_years(tenure_months, df):
+    df["tenure_years"] = (df[tenure_months] / 12).round() - 1
+    customers["tenure_years_bins"]= pd.cut(customers.tenure_years, 3, labels=["1 year or less", "1 to 3 years", "3 to 5 years"])
+    return df
+
+def create_bins_monthly_charges(dataframe):
+    dataframe["monthly_charges_bins"] = pd.cut(dataframe.monthly_charges, 3, labels=["low", "medium", "high"])
+
 def wrangle_telco():
     '''
     Function use to pull the "telco_churn" dataset from sql and 
@@ -29,17 +38,7 @@ def wrangle_telco():
     customers = customers.replace(' ', np.nan)
     customers = customers.dropna()
     customers.total_charges = customers["total_charges"].astype(float)
+    customers["tenure_years"] = (customers["tenure"] / 12).round() - 1
+    customers["tenure_years_bins"]= pd.cut(customers.tenure_years, 3, labels=[">= 1", "1 > x <= 3", "<=5 "])
+    customers["monthly_charges_bins"] = pd.cut(customers.monthly_charges, 3, labels=["Low", "Medium", "High"])
     return customers
-
-# The function below can be used if we want to manually calculate total_charges, rather than just pull it from the database (as there were some minor differences)
-# def wrangle_telco():
-#     customers = pd.read_sql(sql, url)
-#     customers[customers["total_charges"].str.contains(' ')]
-#     customers = customers.replace(' ', np.nan)
-#     customers = customers.dropna()
-#     customers.total_charges = customers["total_charges"].astype(float)
-#     # The commented lines below will only be needed if we want to munally calcualte total_chrages
-#     # customers["total_charges_2"] = customers.tenure * customers.monthly_charges
-#     # customers.drop(columns = ["total_charges"], inplace = True)
-#     # customers = customers.rename(columns = {"total_charges_2": "total_charges"})
-#     return customers
