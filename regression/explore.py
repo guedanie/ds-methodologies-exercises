@@ -38,18 +38,20 @@ def create_bins_monthly_charges(dataframe):
 # Functions for visualization
 
 def plot_variable_pairs(dataframe, hue=None, kind="reg"):
-    sns.pairplot(dataframe, hue=hue, kind=kind)
+    sns.pairplot(dataframe, hue=hue, kind=kind, plot_kws={'line_kws':{'color':'red'}, 'scatter_kws': {'alpha': 0.5}})
 
-def create_jointplot(dataframe, column_1, column_2):
-    sns.jointplot(dataframe.column_1,dataframe.column_2, data=dataframe, kind="reg")
+
+def create_jointplot(dataframe, x, y):
+    sns.jointplot(dataframe.x,dataframe.y, data=dataframe, kind="reg")
 
 
 def plot_categorical_and_continous_vars(categorical_var, continuous_var, df):
-    f, axes = plt.subplots(1,3)
-    sns.boxplot(categorical_var, continuous_var, data=df, ax=axes[0])
+    figure, axes = plt.subplots(1,4, figsize=(16,8))
+    sns.boxplot(categorical_var, continuous_var, data=df, ax=axes[3])
     sns.barplot(x=categorical_var, y=continuous_var, data=df, ax=axes[1])
     sns.swarmplot(x=categorical_var, y=continuous_var, data=df, ax=axes[2])
-    f.tight_layout()
+    sns.countplot(x=categorical_var, data=df, ax=axes[0])
+    figure.tight_layout()
     plt.show()
 
 
