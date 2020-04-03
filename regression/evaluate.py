@@ -33,12 +33,12 @@ def calculate_y_hat(df, model):
     
 
 
-def plot_residuals(df, residual=True):
+def plot_residuals(df, not_residual=True):
     '''
     Plot the residuals for the linear regression model that you made.
     '''
-    if residual:
-        sns.scatterplot(x="yhat", y="residual", data=df)
+    if not_residual:
+        sns.scatterplot(x="y", y="yhat", data=df)
         plt.figure(figsize=(8, 5))
         plt.scatter(df.x, df.residual, color='dimgray')
 
@@ -96,24 +96,40 @@ def regression_errors(df):
     return ss
 
 
-def baseline_mean_errors(df):
+def baseline_mean_errors(df, mean=True):
     '''
     Returns a dataframe with the following values: SSE, ESS, TSS, MSE, RMSE for the baseline
     '''
-    df["yhat_baseline"] = df["y"].mean()
-    # SSE
-    SSE_bl = mean_squared_error(df.y, df.yhat_baseline) * len(df)
-    # ESS
-    ESS_bl = mean_squared_error(df.y, df.yhat_baseline) * len(df)
-    # TSS
-    TSS_bl = ESS_bl + SSE_bl
-    # MSE
-    MSE_bl = mean_squared_error(df.y, df.yhat_baseline)
-    # RMSE
-    RMSE_bl = sqrt(mean_squared_error(df.y, df.yhat_baseline))
-    ss_bl = pd.DataFrame(np.array(["SSE_Baseline", "ESS_Baseline", "TSS_Baseline", "MSE_Baseline", "RMSE_Baseline"]), columns=["metric"])
-    ss_bl["model_values"] = np.array([SSE_bl, ESS_bl, TSS_bl, MSE_bl, RMSE_bl])
-    return ss_bl
+    if mean:
+        df["yhat_baseline"] = df["y"].mean()
+        # SSE
+        SSE_bl = mean_squared_error(df.y, df.yhat_baseline) * len(df)
+        # ESS
+        ESS_bl = mean_squared_error(df.y, df.yhat_baseline) * len(df)
+        # TSS
+        TSS_bl = ESS_bl + SSE_bl
+        # MSE
+        MSE_bl = mean_squared_error(df.y, df.yhat_baseline)
+        # RMSE
+        RMSE_bl = sqrt(mean_squared_error(df.y, df.yhat_baseline))
+        ss_bl = pd.DataFrame(np.array(["SSE_Baseline", "ESS_Baseline", "TSS_Baseline", "MSE_Baseline", "RMSE_Baseline"]), columns=["metric"])
+        ss_bl["model_values"] = np.array([SSE_bl, ESS_bl, TSS_bl, MSE_bl, RMSE_bl])
+        return ss_bl
+    else:
+        df["yhat_baseline"] = df["y"].median()
+        # SSE
+        SSE_bl = mean_squared_error(df.y, df.yhat_baseline) * len(df)
+        # ESS
+        ESS_bl = mean_squared_error(df.y, df.yhat_baseline) * len(df)
+        # TSS
+        TSS_bl = ESS_bl + SSE_bl
+        # MSE
+        MSE_bl = mean_squared_error(df.y, df.yhat_baseline)
+        # RMSE
+        RMSE_bl = sqrt(mean_squared_error(df.y, df.yhat_baseline))
+        ss_bl = pd.DataFrame(np.array(["SSE_Baseline", "ESS_Baseline", "TSS_Baseline", "MSE_Baseline", "RMSE_Baseline"]), columns=["metric"])
+        ss_bl["model_values"] = np.array([SSE_bl, ESS_bl, TSS_bl, MSE_bl, RMSE_bl])
+        return ss_bl
 
 def mean_errors_delta(df):
     '''
