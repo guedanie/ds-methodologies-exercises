@@ -41,7 +41,7 @@ def plot_variable_pairs(dataframe, hue=None, kind="reg"):
     sns.pairplot(dataframe, hue=hue, kind=kind, plot_kws={'line_kws':{'color':'red'}, 'scatter_kws': {'alpha': 0.5}})
 
 
-def create_jointplot(dataframe, x, y):
+def create_jointplot(dataframe, y, x):
     sns.jointplot(dataframe.x,dataframe.y, data=dataframe, kind="reg")
 
 

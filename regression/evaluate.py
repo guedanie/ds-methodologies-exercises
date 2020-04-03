@@ -104,31 +104,23 @@ def baseline_mean_errors(df, mean=True):
         df["yhat_baseline"] = df["y"].mean()
         # SSE
         SSE_bl = mean_squared_error(df.y, df.yhat_baseline) * len(df)
-        # ESS
-        ESS_bl = mean_squared_error(df.y, df.yhat_baseline) * len(df)
-        # TSS
-        TSS_bl = ESS_bl + SSE_bl
         # MSE
         MSE_bl = mean_squared_error(df.y, df.yhat_baseline)
         # RMSE
         RMSE_bl = sqrt(mean_squared_error(df.y, df.yhat_baseline))
         ss_bl = pd.DataFrame(np.array(["SSE_Baseline", "ESS_Baseline", "TSS_Baseline", "MSE_Baseline", "RMSE_Baseline"]), columns=["metric"])
-        ss_bl["model_values"] = np.array([SSE_bl, ESS_bl, TSS_bl, MSE_bl, RMSE_bl])
+        ss_bl["model_values"] = np.array([SSE_bl, MSE_bl, RMSE_bl])
         return ss_bl
     else:
         df["yhat_baseline"] = df["y"].median()
         # SSE
         SSE_bl = mean_squared_error(df.y, df.yhat_baseline) * len(df)
-        # ESS
-        ESS_bl = mean_squared_error(df.y, df.yhat_baseline) * len(df)
-        # TSS
-        TSS_bl = ESS_bl + SSE_bl
         # MSE
         MSE_bl = mean_squared_error(df.y, df.yhat_baseline)
         # RMSE
         RMSE_bl = sqrt(mean_squared_error(df.y, df.yhat_baseline))
         ss_bl = pd.DataFrame(np.array(["SSE_Baseline", "ESS_Baseline", "TSS_Baseline", "MSE_Baseline", "RMSE_Baseline"]), columns=["metric"])
-        ss_bl["model_values"] = np.array([SSE_bl, ESS_bl, TSS_bl, MSE_bl, RMSE_bl])
+        ss_bl["model_values"] = np.array([SSE_bl, MSE_bl, RMSE_bl])
         return ss_bl
 
 def mean_errors_delta(df):
@@ -155,7 +147,7 @@ def model_significance(model):
     '''
     Returns the R^2 and the p value based on the model that we feed the function
     '''
-
-    R = model.rsquared
-    p = model.f_pvalue
-    return R, p
+    return {
+        'r^2 -- variance explained': model.rsquared,
+        'p-value -- P(data|model == baseline)': model.f_pvalue,
+    }
