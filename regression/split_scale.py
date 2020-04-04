@@ -28,6 +28,10 @@ def split_my_data(X, y, train_pct):
     X_train, X_test, y_train, y_test = train_test_split(X, y,train_size=train_pct, random_state = 123)
     return X_train, X_test, y_train, y_test
 
+def split_my_df(df):
+    train, test = train_test_split(df, train_size=.8, random_state=123)
+    return train, test
+
 # Helper function used to updated the scaled arrays and transform them into usable dataframes
 def return_values(scaler, train, test):
     train_scaled = pd.DataFrame(scaler.transform(train), columns=train.columns.values).set_index([train.index.values])
