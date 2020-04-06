@@ -83,16 +83,16 @@ def regression_errors(df):
 
     # SSE
     SSE = mean_squared_error(df.y, df.yhat) * len(df)
-    # ESS
-    ESS = sum((df.yhat - df["y"].mean())**2)
-    # TSS
-    TSS = ESS + SSE
+    # # ESS
+    # ESS = sum((df.yhat - df["y"].mean())**2)
+    # # TSS
+    # TSS = ESS + SSE
     # MSE
     MSE = mean_squared_error(df.y, df.yhat)
     # RMSE
     RMSE = sqrt(mean_squared_error(df.y, df.yhat))
-    ss = pd.DataFrame(np.array(["SSE", "ESS", "TSS", "MSE", "RMSE"]), columns=["metric"])
-    ss["model_values"] = np.array([SSE, ESS, TSS, MSE, RMSE])
+    ss = pd.DataFrame(np.array(["SSE", "MSE", "RMSE"]), columns=["metric"])
+    ss["model_values"] = np.array([SSE, MSE, RMSE])
     return ss
 
 
@@ -108,7 +108,7 @@ def baseline_mean_errors(df, mean=True):
         MSE_bl = mean_squared_error(df.y, df.yhat_baseline)
         # RMSE
         RMSE_bl = sqrt(mean_squared_error(df.y, df.yhat_baseline))
-        ss_bl = pd.DataFrame(np.array(["SSE_Baseline", "ESS_Baseline", "TSS_Baseline", "MSE_Baseline", "RMSE_Baseline"]), columns=["metric"])
+        ss_bl = pd.DataFrame(np.array(["SSE_Baseline", "MSE_Baseline", "RMSE_Baseline"]), columns=["metric"])
         ss_bl["model_values"] = np.array([SSE_bl, MSE_bl, RMSE_bl])
         return ss_bl
     else:

@@ -17,10 +17,12 @@ customers = wrangle_telco()
 # We isolate our X and y variables for
 train_pct = .8
 
-def pull_X_y(customers):
-    X = customers[["tenure", "monthly_charges"]]
-    y = customers[["total_charges"]]
-    return X, y
+def pull_X_y(train, test, y):
+    X_train = train.drop(columns=y)
+    y_train = train[[y]]
+    X_test = test.drop(columns=y)
+    y_test = test[[y]]
+    return X_train, y_train, X_test, y_test
     
 
 # Function used to split the data. Although we do produce 4 new datasets (X["train", "test"] and y["train","test"])
