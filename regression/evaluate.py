@@ -33,14 +33,14 @@ def calculate_y_hat(df, model):
     
 
 
-def plot_residuals(df, not_residual=True):
+def plot_residuals(x, y, df, not_residual=True):
     '''
     Plot the residuals for the linear regression model that you made.
     '''
     if not_residual:
-        sns.scatterplot(x="y", y="yhat", data=df)
+        sns.scatterplot(x=y, y=x, data=df)
         plt.figure(figsize=(8, 5))
-        plt.scatter(df.x, df.residual, color='dimgray')
+        plt.scatter(x, x - y, color='dimgray')
 
         # add the residual line at y=0
         plt.annotate('', xy=(70, 0), xytext=(100, 0), xycoords='data', textcoords='data', arrowprops={'arrowstyle': '-', 'color': 'darkseagreen'})
