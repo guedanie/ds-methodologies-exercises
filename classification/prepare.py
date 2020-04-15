@@ -4,7 +4,7 @@ import split_scale
 
 import sklearn.impute
 import sklearn.model_selection
-import sklearn.preprocessing
+from sklearn.preprocessing import LabelEncoder, OneHotEncoder, MinMaxScaler
 
 
 # --------------------- #
@@ -21,26 +21,17 @@ def drop_columns_iris(df):
 def rename_columns(df):
     return df.rename(columns = {"species_name" : "species"})
 
-def encode_iris(train, test):
-    encoder = sklearn.preprocessing.OneHotEncoder()
-
-    encoder.fit(train[["species"]])
-
-    m = encoder.transform(train[["species"]]).todense()
-
-    train = pd.concat([train, pd.DataFrame(m, columns=encoder.categories_[0], index=train.index)], axis = 1).drop(columns="species")
-
-    m = encoder.transform(test[["species"]]).todense()
-
-    test = pd.concat([test, pd.DataFrame(m, columns=encoder.categories_[0], index=test.index)], axis = 1).drop(columns="species")
-    
-    return train, test
+def label_encode(train, test):
+    le = LabelEncoder()
+    train['species'] = le.fit_transform(train.species)
+    test['species'] = le.transform(test.species)
+    return le, train, test
 
 def prep_iris(df):
     df = drop_columns_iris(df)
     df = rename_columns(df)
     train, test = sklearn.model_selection.train_test_split(df, random_state=123, train_size= .8)
-    train, test = encode_iris(train, test)
+    train, test = label_encode(train, test)
     return train, test
 
 
@@ -83,7 +74,11 @@ def scale_titanic(train, test):
     X_train = train[["age", "fare"]]
     X_test = test[["age", "fare"]]
     scaler, train_scaled, test_scaled = split_scale.min_max_scaler(X_train, X_test)
-    return scaler, train_scaled, test_scaled
+    train["age"] = train_scaled["age"]
+    train["fare"] = train_scaled["fare"]
+    test["age"] = test_scaled["age"]
+    test["fare"] = test_scaled["fare"]
+    return scaler, train, test
 
 def prep_titanic(df):
     df = fill_na_values(df)
