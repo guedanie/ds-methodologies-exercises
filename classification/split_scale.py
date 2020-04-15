@@ -63,7 +63,7 @@ def uniform_scaler(train, test, uniform=True):
 def gaussian_scaler(train, test, positive_negative=True):
     if positive_negative:
         scaler = PowerTransformer(method="yeo-johnson").fit(test)
-        sscaler, train_scaled, test_scaled = return_values(scaler, train , test)
+        scaler, train_scaled, test_scaled = return_values(scaler, train , test)
         return scaler, train_scaled, test_scaled
     else: 
         scaler = PowerTransformer(method="box-cox").fit(test)
