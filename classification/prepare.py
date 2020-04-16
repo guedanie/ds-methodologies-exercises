@@ -31,8 +31,8 @@ def prep_iris(df):
     df = drop_columns_iris(df)
     df = rename_columns(df)
     train, test = sklearn.model_selection.train_test_split(df, random_state=123, train_size= .8)
-    train, test = label_encode(train, test)
-    return train, test
+    le, train, test = label_encode(train, test)
+    return le, train, test
 
 
 # --------------------- #
@@ -87,4 +87,4 @@ def prep_titanic(df):
     train, test = encode_titanic(train, test)
     train, test = impude_titanic(train, test)
     scaler, train_scaled, test_scaled = scale_titanic(train, test)
-    return scaler, train_scaled, test_scaled
+    return train_scaled, test_scaled
