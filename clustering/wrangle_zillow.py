@@ -39,6 +39,13 @@ def read_zillow():
     df.drop(columns= "Unnamed: 0", inplace=True)
     return df
 
+def wrangle_geo_data(df):
+    data = [["CA", "Los Angeles", 6037], ["CA", "Orange County", 6059], ["CA", "Ventura County", 6111]]
+    fips = pd.DataFrame(data, columns= ["state", "county", "fips"])
+    df.fips = df.fips.astype(int)
+    geo_data = df.merge(fips, left_on="fips", right_on="fips")
+    return geo_data
+
 
 # ~~~~~~~~~ Prep ~~~~~~~~~ #
 
@@ -90,7 +97,7 @@ def data_prep(df, cols_to_remove = [], prop_required_column=.5, prop_required_ro
     df.heatingorsystemdesc = df.heatingorsystemdesc.fillna(value="None")
 
     df = df.drop(columns="calculatedbathnbr")
-    
+
     # Drop any rows with no bedroom or bathroom columns
     bath = df.bathroomcnt != 0
     bedroom = df.bedroomcnt != 0
