@@ -91,12 +91,11 @@ def handle_missing_values(df, prop_required_column = .5, prop_required_row = .75
 
 def data_prep(df, cols_to_remove = [], prop_required_column=.5, prop_required_row=.75):
     # Remove any columns
+    df = remove_columns(df, ["Unnamed: 0", "calculatedbathnbr"])
     df = remove_columns(df, cols_to_remove)
 
     # df.heating 
     df.heatingorsystemdesc = df.heatingorsystemdesc.fillna(value="None")
-
-    df = df.drop(columns="calculatedbathnbr")
 
     # Drop any rows with no bedroom or bathroom columns
     bath = df.bathroomcnt != 0
