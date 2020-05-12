@@ -24,6 +24,7 @@ def prepare_sales_data(df):
     df = add_total_sales_column(df)
     return df
 
+# ____ Main Prep Function ___ # 
 def wrangle_sales_data():
     df = acquire.read_compiled_data()
     df = prepare_sales_data(df)
