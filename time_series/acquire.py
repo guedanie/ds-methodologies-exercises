@@ -1,5 +1,6 @@
 import pandas as pd
 import requests
+import os
 
 # ----------------------- #
 #   Acquire Sales Data    #
@@ -65,7 +66,7 @@ def create_merged_report():
 
 # Read from csv
 def read_complied_data():
-    df = pd.read_csv("merged_sales_data.csv")
+    df = pd.read_csv("store_sales.csv")
     df.drop(columns="Unnamed: 0", inplace=True)
     return df
 
@@ -73,9 +74,15 @@ def read_complied_data():
 #   Acquire Energy Data   #
 # ----------------------- #
 
-def get_energy_data():
-    url='https://raw.githubusercontent.com/jenfly/opsd/master/opsd_germany_daily.csv'
-    df =pd.read_csv(url)
-    df = df.fillna(0)
-    df.Date = pd.to_datetime(df.Date)
+def german_energy_csv():
+    """
+    This function returns a df with a datetime index
+    using the opsd_germany url/csv.
+    """
+    if os.path.isfile('german_energy.csv'):
+        df = pd.read_csv('german_energy.csv', parse_dates=True, index_col='Date').sort_index()
+    else:
+        url = 'https://raw.githubusercontent.com/jenfly/opsd/master/opsd_germany_daily.csv'
+        df = pd.read_csv(url, parse_dates=True, index_col="Date").sort_index()
+        df.to_csv('german_energy.csv')
     return df
