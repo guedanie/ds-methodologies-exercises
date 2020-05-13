@@ -65,7 +65,7 @@ def create_merged_report():
     return df
 
 # Read from csv
-def read_compiled_data():
+def read_sales_data():
     df = pd.read_csv("store_sales.csv", index_col="sale_date", parse_dates=True)
     df.drop(columns="Unnamed: 0", inplace=True)
     return df
