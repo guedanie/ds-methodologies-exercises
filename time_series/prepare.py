@@ -41,6 +41,18 @@ def wrangle_sales_data():
     df = prepare_sales_data(df)
     return df
 
+
+def split_time_data_ptc(df, ptc):
+    # Percentage-Based
+    train_size = ptc
+    n = df.shape[0]
+    test_start_index = round(train_size * n)
+
+    train = df[:test_start_index] # everything up (not including) to the test_start_index
+    test = df[test_start_index:] # everything from the test_start_index to the end
+    
+    return train, test
+
 # ----------------------- #
 #   Prepare Energy Data   #
 # ----------------------- #
@@ -63,16 +75,3 @@ def prepped_energy():
     
     return gdf
 
-# ----------------- # 
-#      Explore      #
-# ----------------- #
-def numeric_hists(df, bins=20):
-    """
-    Function to take in a DataFrame, bins default 20,
-    select only numeric dtypes, and
-    display histograms for each numeric column
-    """
-    num_df = df.select_dtypes(include=np.number)
-    num_df.hist(bins=bins, color='thistle')
-    plt.suptitle('Numeric Column Distributions')
-    plt.show()
