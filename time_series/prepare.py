@@ -53,6 +53,11 @@ def split_time_data_ptc(df, ptc):
     
     return train, test
 
+def plot_splits(train, validate, test, target_variable):
+    sns.lineplot(data=train, x=train.index, y= target_variable)
+    sns.lineplot(data=validate, x=validate.index, y= target_variable)
+    sns.lineplot(data=test, x=test.index, y= target_variable)
+
 # ----------------------- #
 #   Prepare Energy Data   #
 # ----------------------- #
